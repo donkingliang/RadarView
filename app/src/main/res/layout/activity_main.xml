@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <com.donkingliang.radar.RadarView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/radar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:circleColor="#565cd6"
+        app:circleNum="4"
+        app:flicker="3"
+        app:speed="5"
+        app:sweepColor="#565cd6"
+        app:showCross="true"
+        app:raindropNum="4"/>
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="扫描" />
+
+    <Button
+        android:id="@+id/btn_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="停止" />
+
+</LinearLayout>
