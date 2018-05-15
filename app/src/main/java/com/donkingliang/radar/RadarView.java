@@ -70,6 +70,12 @@ public class RadarView extends View {
         init();
     }
 
+    /**
+     * 获取自定义属性值
+     *
+     * @param context
+     * @param attrs
+     */
     private void getAttrs(Context context, AttributeSet attrs) {
         if (attrs != null) {
             TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.RadarView);
@@ -102,7 +108,7 @@ public class RadarView extends View {
         // 初始化画笔
         mCirclePaint = new Paint();
         mCirclePaint.setColor(mCircleColor);
-        mCirclePaint.setStrokeWidth(1);//画的宽度
+        mCirclePaint.setStrokeWidth(1);
         mCirclePaint.setStyle(Paint.Style.STROKE);
         mCirclePaint.setAntiAlias(true);
 
@@ -122,6 +128,13 @@ public class RadarView extends View {
                 measureHeight(heightMeasureSpec, defaultSize));
     }
 
+    /**
+     * 测量宽
+     *
+     * @param measureSpec
+     * @param defaultSize
+     * @return
+     */
     private int measureWidth(int measureSpec, int defaultSize) {
         int result = 0;
         int specMode = MeasureSpec.getMode(measureSpec);
@@ -139,6 +152,13 @@ public class RadarView extends View {
         return result;
     }
 
+    /**
+     * 测量高
+     *
+     * @param measureSpec
+     * @param defaultSize
+     * @return
+     */
     private int measureHeight(int measureSpec, int defaultSize) {
         int result = 0;
         int specMode = MeasureSpec.getMode(measureSpec);
@@ -174,13 +194,16 @@ public class RadarView extends View {
             drawCross(canvas, cx, cy, radius);
         }
 
+        //正在扫描
         if (isScanning) {
             if (isShowRaindrop) {
                 drawRaindrop(canvas, cx, cy, radius);
             }
             drawSweep(canvas, cx, cy, radius);
-            //每次绘制旋转10度
+            //计算雷达扫描的旋转角度
             mDegrees = (mDegrees + (360 / mSpeed / 60)) % 360;
+
+            //触发View重新绘制，通过不断的绘制View的扫描动画效果
             invalidate();
         }
     }
@@ -211,7 +234,7 @@ public class RadarView extends View {
      */
     private void generateRaindrop(int cx, int cy, int radius) {
 
-        // 最多只能同时存在4个水滴。
+        // 最多只能同时存在mRaindropNum个水滴。
         if (mRaindrops.size() < mRaindropNum) {
             // 随机一个20以内的数字，如果这个数字刚好是0，就生成一个水滴。
             // 用于控制水滴生成的概率。
@@ -239,6 +262,9 @@ public class RadarView extends View {
         }
     }
 
+    /**
+     * 删除水滴
+     */
     private void removeRaindrop() {
         Iterator<Raindrop> iterator = mRaindrops.iterator();
 
@@ -258,6 +284,7 @@ public class RadarView extends View {
         for (Raindrop raindrop : mRaindrops) {
             mRaindropPaint.setColor(raindrop.changeAlpha());
             canvas.drawCircle(raindrop.x, raindrop.y, raindrop.radius, mRaindropPaint);
+            //水滴的扩散和透明的渐变效果
             raindrop.radius += 1.0f * 20 / 60 / mFlicker;
             raindrop.alpha -= 1.0f * 255 / 60 / mFlicker;
         }
@@ -268,11 +295,13 @@ public class RadarView extends View {
      * 画扫描效果
      */
     private void drawSweep(Canvas canvas, int cx, int cy, int radius) {
+        //扇形的透明的渐变效果
         SweepGradient sweepGradient = new SweepGradient(cx, cy,
                 new int[]{Color.TRANSPARENT, changeAlpha(mSweepColor, 0), changeAlpha(mSweepColor, 168),
                         changeAlpha(mSweepColor, 255), changeAlpha(mSweepColor, 255)
                 }, new float[]{0.0f, 0.6f, 0.99f, 0.998f, 1f});
         mSweepPaint.setShader(sweepGradient);
+        //先旋转画布，再绘制扫描的颜色渲染，实现扫描时的旋转效果。
         canvas.rotate(-90 + mDegrees, cx, cy);
         canvas.drawCircle(cx, cy, radius, mSweepPaint);
     }
@@ -335,6 +364,13 @@ public class RadarView extends View {
                 dpVal, context.getResources().getDisplayMetrics());
     }
 
+    /**a
+     * 改变颜色的透明度
+     *
+     * @param color
+     * @param alpha
+     * @return
+     */
     private static int changeAlpha(int color, int alpha) {
         int red = Color.red(color);
         int green = Color.green(color);
