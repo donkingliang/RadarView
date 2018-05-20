@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- 自定义ImageView 固定宽高比 -->
+    
     <declare-styleable name="RadarView">
         <!--圆圈和交叉线的颜色-->
         <attr name="circleColor" format="color" />
